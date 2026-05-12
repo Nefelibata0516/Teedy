@@ -41,6 +41,7 @@ pipeline {
                 sh 'mvn package -DskipTests'
             }
         }
+    }
     post {
         always {
             archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true

@@ -3,51 +3,55 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
-                sh 'mvn clean'
+                bat 'mvn clean'
             }
         }
         stage('Compile') {
             steps {
-                sh 'mvn compile'
+                bat 'mvn compile'
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test -Dmaven.test.failure.ignore=true'
+                bat 'mvn test -Dmaven.test.failure.ignore=true'
             }
         }
         stage('PMD') {
             steps {
-                sh 'mvn pmd:pmd'
+                bat 'mvn pmd:pmd'
             }
         }
         stage('JaCoCo') {
             steps {
-                sh 'mvn jacoco:report'
+                bat 'mvn jacoco:report'
             }
         }
         stage('Javadoc') {
             steps {
-                sh 'mvn javadoc:javadoc'
+                bat 'mvn javadoc:javadoc'
             }
         }
         stage('Site') {
             steps {
-                sh 'mvn site'
+                bat 'mvn site'
             }
         }
         stage('Package') {
             steps {
-                sh 'mvn package -DskipTests'
+                bat 'mvn package -DskipTests'
             }
         }
     }
     post {
         always {
-            archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
-            junit '**/target/surefire-reports/*.xml'
+            // 归档站点文档（如果存在）
+            archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true, allowEmptyArchive: true
+            // 归档 JAR 文件
+            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true, allowEmptyArchive: true
+            // 归档 WAR 文件
+            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true, allowEmptyArchive: true
+            // 收集测试报告（只有存在时才执行）
+            junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
         }
     }
 }

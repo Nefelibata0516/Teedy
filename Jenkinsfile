@@ -1,56 +1,61 @@
 pipeline {
     agent any
+    
+    environment {
+        // 设置环境变量，根据您的实际安装路径修改
+        MAVEN_HOME = 'C:\\Program Files\\apache-maven-3.9.9'
+        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-11.0.24'
+        PATH = "${MAVEN_HOME}\\bin;${JAVA_HOME}\\bin;%PATH%"
+    }
+    
     stages {
         stage('Clean') {
             steps {
-                bat 'mvn clean'
+                // 使用完整路径调用 mvn
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" clean'
             }
         }
         stage('Compile') {
             steps {
-                bat 'mvn compile'
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" compile'
             }
         }
         stage('Test') {
             steps {
-                bat 'mvn test -Dmaven.test.failure.ignore=true'
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" test -Dmaven.test.failure.ignore=true'
             }
         }
         stage('PMD') {
             steps {
-                bat 'mvn pmd:pmd'
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" pmd:pmd'
             }
         }
         stage('JaCoCo') {
             steps {
-                bat 'mvn jacoco:report'
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" jacoco:report'
             }
         }
         stage('Javadoc') {
             steps {
-                bat 'mvn javadoc:javadoc'
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" javadoc:javadoc'
             }
         }
         stage('Site') {
             steps {
-                bat 'mvn site'
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" site'
             }
         }
         stage('Package') {
             steps {
-                bat 'mvn package -DskipTests'
+                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" package -DskipTests'
             }
         }
     }
     post {
         always {
-            // 归档站点文档（如果存在）
             archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true, allowEmptyArchive: true
-            // 归档 JAR 文件
             archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true, allowEmptyArchive: true
-            // 归档 WAR 文件
             archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true, allowEmptyArchive: true
-            // 收集测试报告（只有存在时才执行）
             junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
         }
     }

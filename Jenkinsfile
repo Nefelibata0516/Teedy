@@ -24,6 +24,7 @@ pipeline {
         stage('JaCoCo') {
             steps {
                 sh 'mvn jacoco:report'
+            }
         }
         stage('Javadoc') {
             steps {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Teedy Custom Metrics Ruleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.github.io/pmd-6.0.0/ruleset_xml_schema.xsd">
+
+  <description>
+    Custom PMD rules focused on LoC, Cyclomatic Complexity, WMC, CBO, and LCOM.
+  </description>
+
+  <rule name="LoCMetric"
+        language="java"
+        message="LoC (NCSS) is too high"
+        class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+    <description>Checks LoC using the NCSS metric for classes.</description>
+    <priority>3</priority>
+    <properties>
+      <property name="xpath">
+        <value>//ClassDeclaration[pmd-java:metric('NCSS') &gt; 1000]</value>
+      </property>
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/CyclomaticComplexity" />
+
+  <rule name="WMCMetric"
+        language="java"
+        message="WMC is too high"
+        class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+    <description>Checks Weighted Methods per Class (WMC).</description>
+    <priority>3</priority>
+    <properties>
+      <property name="xpath">
+        <value>//ClassDeclaration[pmd-java:metric('WEIGHED_METHOD_COUNT') &gt; 50]</value>
+      </property>
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/CouplingBetweenObjects" />
+
+  <rule name="LCOMMetric"
+        language="java"
+        message="LCOM is too high (low class cohesion)"
+        class="net.sourceforge.pmd.lang.rule.xpath.XPathRule">
+    <description>Checks LCOM using inverse TCC (tight class cohesion) threshold.</description>
+    <priority>3</priority>
+    <properties>
+      <property name="xpath">
+        <value>//ClassDeclaration[pmd-java:metric('TIGHT_CLASS_COHESION') &lt; 0.33]</value>
+      </property>
+    </properties>
+  </rule>
+
+</ruleset>

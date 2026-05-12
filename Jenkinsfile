@@ -1,53 +1,45 @@
 pipeline {
     agent any
     
-    environment {
-        // 设置环境变量，根据您的实际安装路径修改
-        MAVEN_HOME = 'C:\\Program Files\\apache-maven-3.9.9'
-        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-11.0.24'
-        PATH = "${MAVEN_HOME}\\bin;${JAVA_HOME}\\bin;%PATH%"
-    }
-    
     stages {
         stage('Clean') {
             steps {
-                // 使用完整路径调用 mvn
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" clean'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" clean'
             }
         }
         stage('Compile') {
             steps {
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" compile'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" compile'
             }
         }
         stage('Test') {
             steps {
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" test -Dmaven.test.failure.ignore=true'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" test -Dmaven.test.failure.ignore=true'
             }
         }
         stage('PMD') {
             steps {
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" pmd:pmd'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" pmd:pmd'
             }
         }
         stage('JaCoCo') {
             steps {
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" jacoco:report'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" jacoco:report'
             }
         }
         stage('Javadoc') {
             steps {
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" javadoc:javadoc'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" javadoc:javadoc'
             }
         }
         stage('Site') {
             steps {
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" site'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" site'
             }
         }
         stage('Package') {
             steps {
-                bat '"C:\\Program Files\\apache-maven-3.9.9\\bin\\mvn" package -DskipTests'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" package -DskipTests'
             }
         }
     }

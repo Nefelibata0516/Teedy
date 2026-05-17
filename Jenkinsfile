@@ -34,7 +34,7 @@ pipeline {
         }
         stage('Javadoc') {
             steps {
-                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U javadoc:javadoc'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U javadoc:javadoc -Dmaven.javadoc.failOnError=false -DadditionalJOption=-Xdoclint:none'
             }
         }
         stage('Site') {

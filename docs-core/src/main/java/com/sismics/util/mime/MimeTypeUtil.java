@@ -32,6 +32,10 @@ public class MimeTypeUtil {
             mimeType = URLConnection.getFileNameMap().getContentTypeFor(name);
         }
 
+        if ("application/x-zip-compressed".equals(mimeType)) {
+            return MimeType.APPLICATION_ZIP;
+        }
+
         if (mimeType == null) {
             return MimeType.DEFAULT;
         }

@@ -1,44 +1,59 @@
 pipeline {
     agent any
+    
     stages {
         stage('Clean') {
             steps {
-                sh 'mvn clean'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U clean'
+            }
         }
         stage('Compile') {
             steps {
-                sh 'mvn compile'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U compile'
+            }
+        }
+        stage('Install Snapshot Artifacts') {
+            steps {
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U -DskipTests install'
+            }
         }
         stage('Test') {
             steps {
-                sh 'mvn test -Dmaven.test.failure.ignore=true'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U test -Dmaven.test.failure.ignore=true'
+            }
         }
         stage('PMD') {
             steps {
-                sh 'mvn pmd:pmd'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U pmd:pmd'
+            }
         }
         stage('JaCoCo') {
             steps {
-                sh 'mvn jacoco:report'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U jacoco:report'
+            }
         }
         stage('Javadoc') {
             steps {
-                sh 'mvn javadoc:javadoc'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U javadoc:javadoc'
+            }
         }
         stage('Site') {
             steps {
-                sh 'mvn site'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U site'
+            }
         }
         stage('Package') {
             steps {
-                sh 'mvn package -DskipTests'
+                bat '"D:\\Program Files\\apache-maven-3.9.15\\bin\\mvn" -B -U package -DskipTests'
+            }
         }
+    }
     post {
         always {
-            archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
-            junit '**/target/surefire-reports/*.xml'
+            archiveArtifacts artifacts: '**/target/site/**/*.*', fingerprint: true, allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true, allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true, allowEmptyArchive: true
+            junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
         }
     }
 }

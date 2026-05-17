@@ -59,7 +59,11 @@ public class FileService extends AbstractScheduledService {
     private void deleteTemporaryFiles() throws Exception {
         TemporaryPathReference ref;
         while ((ref = (TemporaryPathReference) referenceQueue.poll()) != null) {
-            Files.delete(Paths.get(ref.path));
+            try {
+                Files.deleteIfExists(Paths.get(ref.path));
+            } catch (IOException e) {
+                log.debug("Unable to delete temporary file yet: {}", ref.path, e);
+            }
             referenceSet.remove(ref);
         }
     }
